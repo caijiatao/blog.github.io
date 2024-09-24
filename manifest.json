@@ -1,14 +1,14 @@
 {
   "name": "如何写好Go",
   "short_name": "如何写好Go",
-  "start_url": "/caijiatao/blog.github.io/",
-  "scope": "/caijiatao/blog.github.io/",
+  "start_url": "/blog.github.io/",
+  "scope": "/blog.github.io/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/caijiatao/blog.github.io/favicon.svg",
+      "src": "/blog.github.io/favicon.svg",
       "sizes": "512x512"
     }
   ]

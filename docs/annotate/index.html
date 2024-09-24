@@ -13,7 +13,7 @@
 ">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
-<meta name="color-scheme" content="light dark"><meta property="og:url" content="https://github.com/caijiatao/blog.github.io/docs/annotate/">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="https://github.com/blog.github.io/docs/annotate/">
   <meta property="og:site_name" content="如何写好Go">
   <meta property="og:title" content="注释篇">
   <meta property="og:description" content="注释篇#写好注释#">
@@ -22,14 +22,14 @@
     <meta property="article:section" content="docs">
     <meta property="article:modified_time" content="2024-09-24T10:41:13+08:00">
 <title>注释篇 | 如何写好Go</title>
-<link rel="manifest" href="/caijiatao/blog.github.io/manifest.json">
-<link rel="icon" href="/caijiatao/blog.github.io/favicon.png" >
-<link rel="canonical" href="https://github.com/caijiatao/blog.github.io/docs/annotate/">
-<link rel="stylesheet" href="/caijiatao/blog.github.io/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
-  <script defer src="/caijiatao/blog.github.io/fuse.min.js"></script>
-  <script defer src="/caijiatao/blog.github.io/en.search.min.aaab025be3eb015ac71a5f519354c25731430f8c726f8f260614f638e73d839a.js" integrity="sha256-qqsCW&#43;PrAVrHGl9Rk1TCVzFDD4xyb48mBhT2OOc9g5o=" crossorigin="anonymous"></script>
+<link rel="manifest" href="/blog.github.io/manifest.json">
+<link rel="icon" href="/blog.github.io/favicon.png" >
+<link rel="canonical" href="https://github.com/blog.github.io/docs/annotate/">
+<link rel="stylesheet" href="/blog.github.io/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/blog.github.io/fuse.min.js"></script>
+  <script defer src="/blog.github.io/en.search.min.ac492c63d3ddae4539c2599a6920dbb8bc92fc407c733596bf03544a606e123b.js" integrity="sha256-rEksY9PdrkU5wlmaaSDbuLyS/EB8czWWvwNUSmBuEjs=" crossorigin="anonymous"></script>
 
-  <script defer src="/caijiatao/blog.github.io/sw.min.57c9d53954569a8441570303b592a8111e614332d7b58d9bc6518067cb2b303f.js" integrity="sha256-V8nVOVRWmoRBVwMDtZKoER5hQzLXtY2bxlGAZ8srMD8=" crossorigin="anonymous"></script>
+  <script defer src="/blog.github.io/sw.min.e4ddcc263458367a236da27cde805b3b9df4c2597e4f179e82c38949a90085b7.js" integrity="sha256-5N3MJjRYNnojbaJ83oBbO530wll&#43;TxeegsOJSakAhbc=" crossorigin="anonymous"></script>
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -45,7 +45,7 @@ https://github.com/alex-shpak/hugo-book
         
   <nav>
 <h2 class="book-brand">
-  <a class="flex align-center" href="/caijiatao/blog.github.io/"><span>如何写好Go</span>
+  <a class="flex align-center" href="/blog.github.io/"><span>如何写好Go</span>
   </a>
 </h2>
 
@@ -82,9 +82,9 @@ https://github.com/alex-shpak/hugo-book
 
   <ul>
 <li>
-  <a href="/caijiatao/blog.github.io/docs/var/">变量篇</a></li>
+  <a href="/blog.github.io/docs/var/">变量篇</a></li>
 <li>
-  <a href="/caijiatao/blog.github.io/docs/annotate/"class=active>注释篇</a></li>
+  <a href="/blog.github.io/docs/annotate/"class=active>注释篇</a></li>
 </ul>
 
 
@@ -125,14 +125,14 @@ https://github.com/alex-shpak/hugo-book
         
   <div class="flex align-center justify-between">
   <label for="menu-control">
-    <img src="/caijiatao/blog.github.io/svg/menu.svg" class="book-icon" alt="Menu" />
+    <img src="/blog.github.io/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
 
   <strong>注释篇</strong>
 
   <label for="toc-control">
     
-    <img src="/caijiatao/blog.github.io/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    <img src="/blog.github.io/svg/toc.svg" class="book-icon" alt="Table of Contents" />
     
   </label>
 </div>
@@ -179,7 +179,7 @@ https://github.com/alex-shpak/hugo-book
 
 
   <div><a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/commit/9e784c5b7f656937fd589806d3594ddc07b7b048" title='Last modified by caijiatao | September 24, 2024' target="_blank" rel="noopener">
-      <img src="/caijiatao/blog.github.io/svg/calendar.svg" class="book-icon" alt="" />
+      <img src="/blog.github.io/svg/calendar.svg" class="book-icon" alt="" />
       <span>September 24, 2024</span>
     </a>
   </div>
@@ -188,7 +188,7 @@ https://github.com/alex-shpak/hugo-book
 
   <div>
     <a class="flex align-center" href="https://github.com/alex-shpak/hugo-book/edit/main/exampleSite/content/docs/annotate.md" target="_blank" rel="noopener">
-      <img src="/caijiatao/blog.github.io/svg/edit.svg" class="book-icon" alt="" />
+      <img src="/blog.github.io/svg/edit.svg" class="book-icon" alt="" />
       <span>Edit this page</span>
     </a>
   </div>
