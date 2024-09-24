@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head><script src="/blog.github.io/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog.github.io/livereload" data-no-instant defer></script>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="看 Kubernetes 代码的过程中，不断回忆起之前看的代码封装相关的书籍，比如 《重构》、《代码整洁之道》和《设计模式》等，发现在 Kubernetes 不断在践行这些书籍里面的理论和技巧。
+也正因如此，在读代码的过程中能通过符合直觉的方式去推导想要了解的内容，也能快速了解到代码的意图。Kubernetes 源码里面，优秀的注释和变量命名也是帮助开发者更好了解代码设计的意图。那 Kubernetes 源码中注释和变量命名有哪些值得我们学习的呢？
+
+  变量篇
+  #
+
+
+  变量名不是越详细越好
+  #
+
+**如果变量名要精确表达具体的意思，势必会遇到一个问题，就是长度会太长。**但是，当一个非常长的变量名反复出现在代码中的时候，这种感觉就像是 别洛焦尔斯基 和 特维尔斯基 这么多个“司机”，我们看起来也会十分的头疼。
+为了避免这种过分精确的重复命名带来的困惑，我们可以通过上下文的语义，帮助短小精悍的变量名表达更多的含义。
+func (q *graceTerminateRSList) remove(rs *listItem) bool{
+		//...
+}
+在 Kubernetes 的  graceTerminateRSList  结构体的定义，我们就不需要写graceTerminateRealServerList ，因为对应上下文的 listItem 的时候内部已经用了全称定义。
+type listItem struct {
+	VirtualServer *utilipvs.VirtualServer
+	RealServer    *utilipvs.RealServer
+}
+所以在这个语境下面， rs 对应的只会是 realServer 而不会是 replicaSet 或者是其他的，如果有这种歧义的可能性，那么就不能进行这种缩写。
+还有graceTerminateRSList  的移除 rs 方法，我们不需要写 removeRS 或者是 removeRealServer ，在传入的参数签名就已经有了 rs *listItem ，所以这个方法移除的只能是 rs ，在方法名加上 rs 反而显得冗余了。
+在起名字的时候，尽可能短的命名承载更多的意思。
+func CountNumber(nums []int, n int) (count int) {
+	for i := 0; i &lt; len(nums); i&#43;&#43; {
+		// 如果要赋值 则 v := nums[i]
+		if nums[i] == n {
+			count&#43;&#43;
+		}
+	}
+	return
+}
+
+func CountNumberBad(nums []int, n int) (count int) {
+	for index := 0; index &lt; len(nums); index&#43;&#43; {
+		value := nums[index]
+		if value == n {
+			count&#43;&#43;
+		}
+	}
+	return
+}
+index并不比 i 承载了更多信息， value 也不比 v 更好，所以，在这个例子中，是可以使用缩写来代替的。但是，缩写也并不完全带来好处，需要看具体的场景是否会产生歧义而确定。">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/blog.github.io/docs/%E6%B3%A8%E9%87%8A%E7%AF%87/">
+  <meta property="og:site_name" content="如何写好 Go">
+  <meta property="og:title" content="注释篇">
+  <meta property="og:description" content="看 Kubernetes 代码的过程中，不断回忆起之前看的代码封装相关的书籍，比如 《重构》、《代码整洁之道》和《设计模式》等，发现在 Kubernetes 不断在践行这些书籍里面的理论和技巧。
+也正因如此，在读代码的过程中能通过符合直觉的方式去推导想要了解的内容，也能快速了解到代码的意图。Kubernetes 源码里面，优秀的注释和变量命名也是帮助开发者更好了解代码设计的意图。那 Kubernetes 源码中注释和变量命名有哪些值得我们学习的呢？
+变量篇#变量名不是越详细越好#**如果变量名要精确表达具体的意思，势必会遇到一个问题，就是长度会太长。**但是，当一个非常长的变量名反复出现在代码中的时候，这种感觉就像是 别洛焦尔斯基 和 特维尔斯基 这么多个“司机”，我们看起来也会十分的头疼。
+为了避免这种过分精确的重复命名带来的困惑，我们可以通过上下文的语义，帮助短小精悍的变量名表达更多的含义。
+func (q *graceTerminateRSList) remove(rs *listItem) bool{ //... } 在 Kubernetes 的 graceTerminateRSList 结构体的定义，我们就不需要写graceTerminateRealServerList ，因为对应上下文的 listItem 的时候内部已经用了全称定义。
+type listItem struct { VirtualServer *utilipvs.VirtualServer RealServer *utilipvs.RealServer } 所以在这个语境下面， rs 对应的只会是 realServer 而不会是 replicaSet 或者是其他的，如果有这种歧义的可能性，那么就不能进行这种缩写。
+还有graceTerminateRSList 的移除 rs 方法，我们不需要写 removeRS 或者是 removeRealServer ，在传入的参数签名就已经有了 rs *listItem ，所以这个方法移除的只能是 rs ，在方法名加上 rs 反而显得冗余了。
+在起名字的时候，尽可能短的命名承载更多的意思。
+func CountNumber(nums []int, n int) (count int) { for i := 0; i &lt; len(nums); i&#43;&#43; { // 如果要赋值 则 v := nums[i] if nums[i] == n { count&#43;&#43; } } return } func CountNumberBad(nums []int, n int) (count int) { for index := 0; index &lt; len(nums); index&#43;&#43; { value := nums[index] if value == n { count&#43;&#43; } } return } index并不比 i 承载了更多信息， value 也不比 v 更好，所以，在这个例子中，是可以使用缩写来代替的。但是，缩写也并不完全带来好处，需要看具体的场景是否会产生歧义而确定。">
+  <meta property="og:locale" content="en">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+<title>注释篇 | 如何写好 Go</title>
+<link rel="manifest" href="/blog.github.io/manifest.json">
+<link rel="icon" href="/blog.github.io/favicon.png" >
+<link rel="canonical" href="http://localhost:1313/blog.github.io/docs/%E6%B3%A8%E9%87%8A%E7%AF%87/">
+<link rel="stylesheet" href="/blog.github.io/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
+  <script defer src="/blog.github.io/fuse.min.js"></script>
+  <script defer src="/blog.github.io/en.search.min.5d92b9f2f9c0d496354c3bbf9f26600012f3ddc51640388a7b1b15d920ba5759.js" integrity="sha256-XZK58vnA1JY1TDu/nyZgABLz3cUWQDiKexsV2SC6V1k=" crossorigin="anonymous"></script>
+
+  <script defer src="/blog.github.io/sw.min.e4ddcc263458367a236da27cde805b3b9df4c2597e4f179e82c38949a90085b7.js" integrity="sha256-5N3MJjRYNnojbaJ83oBbO530wll&#43;TxeegsOJSakAhbc=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/blog.github.io/"><span>如何写好 Go</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="wechat.png"  target="_blank" rel="noopener">
+        微信公众号
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/caijiatao/"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+  <li>
+    <a href=""  target="_blank" rel="noopener">
+        
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/blog.github.io/docs/%E5%8F%98%E9%87%8F%E7%AF%87/">注释篇</a></li>
+<li>
+  <a href="/blog.github.io/docs/%E6%B3%A8%E9%87%8A%E7%AF%87/"class=active>变量篇</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/blog.github.io/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>注释篇</strong>
+
+  <label for="toc-control">
+    
+    <img src="/blog.github.io/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#变量篇">变量篇</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#变量名不是越详细越好">变量名不是越详细越好</a></li>
+            <li><a href="#变量名需要避免理解歧义">变量名需要避免理解歧义</a></li>
+            <li><a href="#相同含义的变量需保持一致">相同含义的变量需保持一致</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p>看 <code>Kubernetes</code> 代码的过程中，不断回忆起之前看的代码封装相关的书籍，比如 《重构》、《代码整洁之道》和《设计模式》等，发现在 <code>Kubernetes</code> 不断在践行这些书籍里面的理论和技巧。</p>
+<p>也正因如此，在读代码的过程中能通过符合直觉的方式去推导想要了解的内容，也能快速了解到代码的意图。Kubernetes 源码里面，优秀的注释和变量命名也是帮助开发者更好了解代码设计的意图。那 Kubernetes 源码中注释和变量命名有哪些值得我们学习的呢？</p>
+<h1 id="变量篇">
+  变量篇
+  <a class="anchor" href="#%e5%8f%98%e9%87%8f%e7%af%87">#</a>
+</h1>
+<h3 id="变量名不是越详细越好">
+  变量名不是越详细越好
+  <a class="anchor" href="#%e5%8f%98%e9%87%8f%e5%90%8d%e4%b8%8d%e6%98%af%e8%b6%8a%e8%af%a6%e7%bb%86%e8%b6%8a%e5%a5%bd">#</a>
+</h3>
+<p>**如果变量名要精确表达具体的意思，势必会遇到一个问题，就是长度会太长。**但是，当一个非常长的变量名反复出现在代码中的时候，这种感觉就像是 别洛焦尔斯基 和 特维尔斯基 这么多个“司机”，我们看起来也会十分的头疼。</p>
+<p>为了避免这种过分精确的重复命名带来的困惑，我们可以通过上下文的语义，<strong>帮助短小精悍的变量名表达更多的含义。</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">q</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">graceTerminateRSList</span>) <span style="color:#a6e22e">remove</span>(<span style="color:#a6e22e">rs</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">listItem</span>) <span style="color:#66d9ef">bool</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">//...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>在 <code>Kubernetes</code> 的  <code>graceTerminateRSList</code>  结构体的定义，我们就不需要写<code>graceTerminateRealServerList</code> ，因为对应上下文的 <code>listItem</code> 的时候内部已经用了全称定义。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">listItem</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">VirtualServer</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">utilipvs</span>.<span style="color:#a6e22e">VirtualServer</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">RealServer</span>    <span style="color:#f92672">*</span><span style="color:#a6e22e">utilipvs</span>.<span style="color:#a6e22e">RealServer</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>所以在这个语境下面， <code>rs</code> 对应的只会是 <code>realServer</code> 而不会是 <code>replicaSet</code> 或者是其他的，<strong>如果有这种歧义的可能性，那么就不能进行这种缩写。</strong></p>
+<p>还有<code>graceTerminateRSList</code>  的移除 <code>rs</code> 方法，我们不需要写 <code>removeRS</code> 或者是 <code>removeRealServer</code> ，在传入的参数签名就已经有了 <code>rs *listItem</code> ，所以这个方法移除的只能是 <code>rs</code> ，在方法名加上 <code>rs</code> 反而显得冗余了。</p>
+<p><strong>在起名字的时候，尽可能短的命名承载更多的意思。</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">CountNumber</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) (<span style="color:#a6e22e">count</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">nums</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 如果要赋值 则 v := nums[i]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">n</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">CountNumberBad</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>) (<span style="color:#a6e22e">count</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">index</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">index</span> &lt; len(<span style="color:#a6e22e">nums</span>); <span style="color:#a6e22e">index</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">value</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">index</span>]
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">value</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">n</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>index</code>并不比 <code>i</code> 承载了更多信息， <code>value</code> 也不比 <code>v</code> 更好，所以，在这个例子中，是可以使用缩写来代替的。但是，<strong>缩写也并不完全带来好处，需要看具体的场景是否会产生歧义而确定。</strong></p>
+<h3 id="变量名需要避免理解歧义">
+  变量名需要避免理解歧义
+  <a class="anchor" href="#%e5%8f%98%e9%87%8f%e5%90%8d%e9%9c%80%e8%a6%81%e9%81%bf%e5%85%8d%e7%90%86%e8%a7%a3%e6%ad%a7%e4%b9%89">#</a>
+</h3>
+<p>想要表达参加活动的用户数（  <code>int</code> 类型），那么用 <code>userCount</code> 比用 <code>user</code> 或者 <code>users</code> 更好。<strong>因为</strong> <code>user</code> <strong>可以表示用户信息的对象，而</strong> <code>users</code> <strong>可能是用户信息的切片，如果使用这两个会给用户带来歧义。</strong></p>
+<p>再看一个例子。 <code>min</code> 在某些情况下可以表示最小值(minimum)，也可以表示分钟(minutes)，如果我们在一些比较容易混淆的场景下，我们就用全拼来代替缩写。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// 计算最小价格和促销活动的剩余时间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 商品价格列表
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">prices</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">float64</span>{<span style="color:#ae81ff">12.99</span>, <span style="color:#ae81ff">9.99</span>, <span style="color:#ae81ff">15.99</span>, <span style="color:#ae81ff">8.49</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 各个商品促销剩余时间（分钟）
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">remainingMinutes</span> <span style="color:#f92672">:=</span> []<span style="color:#66d9ef">int</span>{<span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">45</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// min := findMinPrice(prices) // 变量名 &#34;min&#34;：表示最小价格
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">minPrice</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">findMinPrice</span>(<span style="color:#a6e22e">prices</span>) 
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;商品的最低价格: $%.2f\n&#34;</span>, <span style="color:#a6e22e">min</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// min = findMinTime(remainingMinutes) // 变量名 &#34;min&#34;：表示剩余的最短时间
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">remainingMinute</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">findMinTime</span>(<span style="color:#a6e22e">remainingMinutes</span>) 
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;促销活动的最短剩余时间: %d minutes\n&#34;</span>, <span style="color:#a6e22e">min</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>在这个例子中， <code>min</code> 不仅能表示商品最低价格，还能表示活动剩余的最小分钟数，所以在这种情况下我们就不要使用缩写。这样我们就能明确的区分出找到的是最小价格还是最小分钟数。</p>
+<h3 id="相同含义的变量需保持一致">
+  相同含义的变量需保持一致
+  <a class="anchor" href="#%e7%9b%b8%e5%90%8c%e5%90%ab%e4%b9%89%e7%9a%84%e5%8f%98%e9%87%8f%e9%9c%80%e4%bf%9d%e6%8c%81%e4%b8%80%e8%87%b4">#</a>
+</h3>
+<p><strong>整个项目中代表相同含义的变量名字应该尽量保持一致</strong>，如果项目里把用户 <code>id</code> 写成 <code>UserId</code> ，那么在其他地方进行复制的时候，就不要把他改成 <code>Uid</code> ，这样我们就会疑惑 <code>UserId</code> 和 <code>Uid</code> 是否是同个东西。</p>
+<p>不要小看这种情况，有的时候因为多个系统都存在用户id，我们可能都需要进行存储，如果不加前缀进行区分，那么在需要使用的时候会无从下手。</p>
+<p>比如用户A作为买家的角色，买了卖家的某个商品，并且由骑手进行派送。</p>
+<p>这里就出现了三个用户id：买家、卖家和骑手。</p>
+<p>这个时候我们可以通过增加模块前缀的方式来区分：<strong>BuyerId 、SellerId和DriverId。</strong></p>
+<p><strong>这个时候我们也尽量不要进行缩写，因为这三个已经足够简短，如果我们把函数入参的 SellerId 缩写成 Sid 的话，当后面的需求有一个商铺id（ShopId）的概念，这个时候我们就会疑惑，Sid 是对应的 <code>SellerId</code> 还是 <code>ShopId</code> 。</strong> 如果有个人卖家就是通过 <code>SellerId</code> 填充了 <code>ShopId</code> ，那这个时候就会造成线上的 BUG。</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+</div>
+
+
+
+  <script>(function(){function e(e){const t=window.getSelection(),n=document.createRange();n.selectNodeContents(e),t.removeAllRanges(),t.addRange(n)}document.querySelectorAll("pre code").forEach(t=>{t.addEventListener("click",function(){if(window.getSelection().toString())return;e(t.parentElement),navigator.clipboard&&navigator.clipboard.writeText(t.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#变量篇">变量篇</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#变量名不是越详细越好">变量名不是越详细越好</a></li>
+            <li><a href="#变量名需要避免理解歧义">变量名需要避免理解歧义</a></li>
+            <li><a href="#相同含义的变量需保持一致">相同含义的变量需保持一致</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

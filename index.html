@@ -4,24 +4,49 @@
 	<meta name="generator" content="Hugo 0.134.3"><script src="/blog.github.io/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=blog.github.io/livereload" data-no-instant defer></script>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
+<meta name="description" content="
+  如何写好 Go 代码
+  #
+
+
+  为什么要写这个专栏
+  #
+
+
+  目标读者
+  #
+
+
+  主要内容
+  #
+
+
+  互动与勘误
+  #
+
+如果错误的地方欢迎在评论区指出，看到后会及时更正。
+
+  
+This work is licensed under 
+  CC BY-NC-ND 4.0 ">
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
 <meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/blog.github.io/">
-  <meta property="og:site_name" content="如何写好Go">
-  <meta property="og:title" content="如何写好Go">
+  <meta property="og:site_name" content="如何写好 Go">
+  <meta property="og:title" content="如何写好 Go 代码">
+  <meta property="og:description" content="如何写好 Go 代码#为什么要写这个专栏#目标读者#主要内容#互动与勘误#如果错误的地方欢迎在评论区指出，看到后会及时更正。 This work is licensed under CC BY-NC-ND 4.0 ">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="website">
-<title>如何写好Go | 如何写好Go</title>
+<title>如何写好 Go 代码 | 如何写好 Go</title>
 <link rel="manifest" href="/blog.github.io/manifest.json">
 <link rel="icon" href="/blog.github.io/favicon.png" >
 <link rel="canonical" href="http://localhost:1313/blog.github.io/">
 <link rel="stylesheet" href="/blog.github.io/book.min.309b7ed028807cdb68d8d61e26d609f48369c098dbf5e4d8c0dcf4cdf49feafc.css" integrity="sha256-MJt&#43;0CiAfNto2NYeJtYJ9INpwJjb9eTYwNz0zfSf6vw=" crossorigin="anonymous">
   <script defer src="/blog.github.io/fuse.min.js"></script>
-  <script defer src="/blog.github.io/en.search.min.c2836f92b94f59b796b42dbce3b494e5480a31143db3d6a15b7f70b4cc6c017c.js" integrity="sha256-woNvkrlPWbeWtC2847SU5UgKMRQ9s9ahW39wtMxsAXw=" crossorigin="anonymous"></script>
+  <script defer src="/blog.github.io/en.search.min.5d92b9f2f9c0d496354c3bbf9f26600012f3ddc51640388a7b1b15d920ba5759.js" integrity="sha256-XZK58vnA1JY1TDu/nyZgABLz3cUWQDiKexsV2SC6V1k=" crossorigin="anonymous"></script>
 
   <script defer src="/blog.github.io/sw.min.e4ddcc263458367a236da27cde805b3b9df4c2597e4f179e82c38949a90085b7.js" integrity="sha256-5N3MJjRYNnojbaJ83oBbO530wll&#43;TxeegsOJSakAhbc=" crossorigin="anonymous"></script>
-<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/blog.github.io/index.xml" title="如何写好Go" />
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/blog.github.io/index.xml" title="如何写好 Go" />
 <!--
 Made with Book Theme
 https://github.com/alex-shpak/hugo-book
@@ -37,7 +62,7 @@ https://github.com/alex-shpak/hugo-book
         
   <nav>
 <h2 class="book-brand">
-  <a class="flex align-center" href="/blog.github.io/"><span>如何写好Go</span>
+  <a class="flex align-center" href="/blog.github.io/"><span>如何写好 Go</span>
   </a>
 </h2>
 
@@ -59,6 +84,18 @@ https://github.com/alex-shpak/hugo-book
 <ul>
   
   <li>
+    <a href="wechat.png"  target="_blank" rel="noopener">
+        微信公众号
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/caijiatao/"  target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+  <li>
     <a href=""  target="_blank" rel="noopener">
         
       </a>
@@ -74,26 +111,14 @@ https://github.com/alex-shpak/hugo-book
 
   <ul>
 <li>
-  <a href="/blog.github.io/docs/var/">注释篇</a></li>
+  <a href="/blog.github.io/docs/%E5%8F%98%E9%87%8F%E7%AF%87/">注释篇</a></li>
 <li>
-  <a href="/blog.github.io/docs/annotate/">变量篇</a></li>
+  <a href="/blog.github.io/docs/%E6%B3%A8%E9%87%8A%E7%AF%87/">变量篇</a></li>
 </ul>
 
 
 
 
-
-
-  
-<ul>
-  
-  <li>
-    <a href="https://github.com/caijiatao/"  target="_blank" rel="noopener">
-        Github
-      </a>
-  </li>
-  
-</ul>
 
 
 
@@ -120,7 +145,7 @@ https://github.com/alex-shpak/hugo-book
     <img src="/blog.github.io/svg/menu.svg" class="book-icon" alt="Menu" />
   </label>
 
-  <strong>如何写好Go</strong>
+  <strong>如何写好 Go 代码</strong>
 
   <label for="toc-control">
     
@@ -134,7 +159,18 @@ https://github.com/alex-shpak/hugo-book
   <aside class="hidden clearfix">
     
   
-<nav id="TableOfContents"></nav>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#如何写好-go-代码">如何写好 Go 代码</a>
+      <ul>
+        <li><a href="#为什么要写这个专栏">为什么要写这个专栏</a></li>
+        <li><a href="#目标读者">目标读者</a></li>
+        <li><a href="#主要内容">主要内容</a></li>
+        <li><a href="#互动与勘误">互动与勘误</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
 
@@ -145,7 +181,32 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown book-article"></article>
+  <article class="markdown book-article"><h1 id="如何写好-go-代码">
+  如何写好 Go 代码
+  <a class="anchor" href="#%e5%a6%82%e4%bd%95%e5%86%99%e5%a5%bd-go-%e4%bb%a3%e7%a0%81">#</a>
+</h1>
+<h2 id="为什么要写这个专栏">
+  为什么要写这个专栏
+  <a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e5%86%99%e8%bf%99%e4%b8%aa%e4%b8%93%e6%a0%8f">#</a>
+</h2>
+<h2 id="目标读者">
+  目标读者
+  <a class="anchor" href="#%e7%9b%ae%e6%a0%87%e8%af%bb%e8%80%85">#</a>
+</h2>
+<h2 id="主要内容">
+  主要内容
+  <a class="anchor" href="#%e4%b8%bb%e8%a6%81%e5%86%85%e5%ae%b9">#</a>
+</h2>
+<h2 id="互动与勘误">
+  互动与勘误
+  <a class="anchor" href="#%e4%ba%92%e5%8a%a8%e4%b8%8e%e5%8b%98%e8%af%af">#</a>
+</h2>
+<p>如果错误的地方欢迎在评论区指出，看到后会及时更正。
+
+  <img src="wechat.png" alt="微信公众号" /></p>
+<p>This work is licensed under 
+  <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1">CC BY-NC-ND 4.0 </a></p>
+</article>
  
       
 
@@ -170,6 +231,10 @@ https://github.com/alex-shpak/hugo-book
 
       
   
+  <div class="book-comments">
+
+</div>
+  
  
 
       <label for="menu-control" class="hidden book-menu-overlay"></label>
@@ -180,7 +245,18 @@ https://github.com/alex-shpak/hugo-book
       <div class="book-toc-content">
         
   
-<nav id="TableOfContents"></nav>
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#如何写好-go-代码">如何写好 Go 代码</a>
+      <ul>
+        <li><a href="#为什么要写这个专栏">为什么要写这个专栏</a></li>
+        <li><a href="#目标读者">目标读者</a></li>
+        <li><a href="#主要内容">主要内容</a></li>
+        <li><a href="#互动与勘误">互动与勘误</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
 
 
  
