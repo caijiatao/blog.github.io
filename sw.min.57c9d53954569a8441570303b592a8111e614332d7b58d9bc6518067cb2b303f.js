@@ -1,0 +1,1 @@
+navigator.serviceWorker&&navigator.serviceWorker.register("/caijiatao/blog.github.io/sw.js",{scope:"/caijiatao/blog.github.io/"})
